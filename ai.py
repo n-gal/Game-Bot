@@ -45,36 +45,36 @@ def main():
         y_ai = predict(model, screen)
         print(y_ai)
         y_ai = places_list[y_ai]
-        y_ai = [int(i) for i in y_ai]
+        #y_ai = [int(i) for i in y_ai]
         print(y_ai)
-        if y_ai == [0, 0, 0, 0]:
+        if y_ai == ['0', '0', '0', '0']:
             # Not action
             continue
-        if y_ai[0] == -1 and y_ai[1] == -1:
+        if y_ai[0] == '-1' and y_ai[1] == '-1':
             # Only keyboard action.
-            key = get_key(y_ai[3])
-            if y_ai[2] == 1:
+            key = get_key(int(y_ai[3]))
+            if y_ai[2] == '1':
                 # Press:
                 press(key)
             else:
                 # Release:
                 release(key)
-        elif y_ai[2] == 0 and y_ai[3] == 0:
+        elif y_ai[2] == '0' and y_ai[3] == '0':
             # Click action.
             click(y_ai[0], y_ai[1])
 
-        # else:
-        #     # Mouse and keyboard action.
-        #     # Mouse:
-        #     click(int(y_ai[0]), int(y_ai[1]))
-        #     # Keyboard:
-        #     key = get_key(int(y_ai[3]))
-        #     if y_ai[2] == 1:
-        #         # Press:
-        #         press(key)
-        #     else:
-        #         # Release:
-        #         release(key)
+        else:
+             # Mouse and keyboard action.
+             # Mouse:
+             click(int(y_ai[0]), int(y_ai[1]))
+             # Keyboard:
+             key = get_key(int(y_ai[3]))
+             if y_ai[2] == 1:
+                 # Press:
+                 press(key)
+             else:
+                 # Release:
+                 release(key)
 
         time.sleep(0.005)
 

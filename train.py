@@ -3,6 +3,7 @@ This will train the model.
 Author: Arda Mavi
 """
 import os
+import numpy as np
 
 from tensorflow.keras.callbacks import ModelCheckpoint, TensorBoard
 
@@ -34,8 +35,17 @@ def train_model(model, x, x_test, y, y_test):
         save_weights_only=True,
         mode='auto',
         period=1,
-    ), TensorBoard(log_dir='Data/Checkpoints/./logs', histogram_freq=0, write_graph=True, write_images=False,
-                   embeddings_freq=0, embeddings_layer_names=None, embeddings_metadata=None)]
+), TensorBoard(log_dir='Data/Checkpoints/./logs', histogram_freq=0, write_graph=True, write_images=False)]
+
+    # Reshape y and y_test to match the output shape of your model
+    y = y.reshape(y.shape[0], -1)
+    y_test = y_test.reshape(y_test.shape[0], -1)
+
+    # If your model expects a different shape, adjust the numbers accordingly
+    expected_shape = 541
+    y = y[:,:expected_shape]
+    y_test = y_test[:,:expected_shape]
+
 
     model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_data=(x_test, y_test), shuffle=True,
               callbacks=checkpoints)

@@ -1,10 +1,11 @@
-"""
-This file will make a prediction based on the input data.
-Author: Arda Mavi
-"""
 from PIL import Image
-from numpy import size
+import numpy as np
 
+temperature = 0.1
+
+def softmax(x, temperature):
+    e_x = np.exp(x / temperature)
+    return e_x / e_x.sum(axis=0)
 
 def predict(model, X):
     """
@@ -14,8 +15,11 @@ def predict(model, X):
     :return: y_pred: prediction.
     """
     # resize it with PIL, because scipy.misc.imresize is deprecated.
-    x = X(Image.fromarray(X).resize((size[0] * 4, size[1] * 4),
-                                    resample=Image.BICUBIC))
-    y = model.predict(x.reshape(1, 150, 150, 3))
-    y = y.argmax()
+    X_resized = Image.fromarray(X).resize((150, 150), resample=Image.BICUBIC)
+    X_resized = np.array(X_resized)
+    logits = model.predict(X_resized.reshape(1, 150, 150, 3))
+    
+    probabilities = softmax(logits[0], temperature)
+    y = np.random.choice(len(probabilities), p=probabilities)
     return y
+
